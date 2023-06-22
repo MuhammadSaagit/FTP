@@ -1,0 +1,27 @@
+---
+- name: Install and configure FTP server
+  hosts: ftp_servers
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install ProFTPD
+      apt:
+        name: proftpd-basic
+        state: present
+
+    - name: Copy FTP server configuration file
+      copy:
+        srs: files/proftpd.conf
+        dest: /etc/proftpd/proftpd.conf
+        owner: root
+	group: root
+	mode: 0644
+
+    - name: Restart FTP server
+      service:
+	name: proftpd
+	state: restarted

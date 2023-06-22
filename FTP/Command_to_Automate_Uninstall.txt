@@ -1,0 +1,2 @@
+chmod +x ftp_removal.sh
+

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Path to the CSV file containing user information
+CSV_FILE="users.csv"
+
+# Read the CSV file line by line
+while IFS=, read -r username password role sudo_enabled
+do
+
+# Create the user with specified username and password
+useradd -m -s /bin/bask "$username"
+echo "$username:$password" | chpasswd
+
+# Grant FTP access to the user
+usermod -aG ftp "$username"
+
+# Grant sudo rights if enabled
+if [ "$sudo_enabled" = "yes" ]; then
+usermod -aG sudo "$username"
+fi
+
+# Set ownership of the user's home directory
+chown -R "$username:$username" "/home/$username"
+done < "$CSV_FILE:
